@@ -1,6 +1,7 @@
 const User = require('../Models/UserModel')
 const { createSecretToken } = require('../util/SecretToken')
 const bcrypt = require('bcryptjs')
+const { sendEmail } = require('../util/SendMail')
 
 module.exports.Signup = async (req, res, next) => {
   try {
@@ -49,5 +50,18 @@ module.exports.Login = async (req, res, next) => {
     next()
   } catch (error) {
     console.error(error)
+  }
+}
+
+module.exports.SendMail = async (req, res) => {
+  try {
+    await sendEmail(
+      'adrianpodrazacv@gmail.com',
+      'Temat wiadomości',
+      '<h1>Treść HTML</h1><p>Przykładowa wiadomość</p>',
+    )
+    res.status(200).json({ message: 'Email wysłany pomyślnie' })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
   }
 }

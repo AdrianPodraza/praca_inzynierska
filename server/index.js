@@ -5,6 +5,7 @@ const cors = require('cors')
 const app = express()
 require('dotenv').config()
 const authRoute = require('./Routes/AuthRoute')
+const mailRoute = require('./Routes/MailRoute')
 const { MONGO_URL, PORT } = process.env
 
 mongoose
@@ -28,3 +29,4 @@ app.use(cookieParser())
 app.use(express.json())
 
 app.use('/', authRoute)
+app.use('/api', mailRoute)
