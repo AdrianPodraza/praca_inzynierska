@@ -7,6 +7,7 @@ type InputValues = {
   email: string
   password: string
   username: string
+  phoneNumber: string  
 }
 
 type ServerResponse = {
@@ -20,9 +21,10 @@ const Signup: React.FC = () => {
     email: '',
     password: '',
     username: '',
+    phoneNumber: '',
   })
 
-  const { email, password, username } = inputValue
+  const { email, password, username,phoneNumber } = inputValue
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target
@@ -71,6 +73,7 @@ const Signup: React.FC = () => {
       email: '',
       password: '',
       username: '',
+      phoneNumber: '',
     })
   }
 
@@ -99,6 +102,16 @@ const Signup: React.FC = () => {
           />
         </div>
         <div>
+          <label htmlFor='phoneNumber'>phoneNumber</label>
+          <input
+            type='email'
+            name='phoneNumber'
+            value={phoneNumber}
+            placeholder='Enter your phoneNumber'
+            onChange={handleOnChange}
+          />
+        </div>
+        <div>
           <label htmlFor='password'>Password</label>
           <input
             type='password'
@@ -107,6 +120,7 @@ const Signup: React.FC = () => {
             placeholder='Enter your password'
             onChange={handleOnChange}
           />
+          
         </div>
         <button type='submit'>Submit</button>
         <span>
