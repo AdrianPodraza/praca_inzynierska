@@ -2,18 +2,36 @@ const User = require('../Models/UserModel')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
 
-module.exports.userVerification = (req, res) => {
+module.exports.userVerification = async (req, res, next) => {
+  // Pobieramy token z ciasteczka
   const token = req.cookies.token
+
+  // Jeśli token nie istnieje, zwracamy błąd 401
   if (!token) {
-    return res.json({ status: false })
+    return res
+      .status(401)
+      .json({ message: 'Brak tokena, autoryzacja odmówiona' })
   }
-  jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
-    if (err) {
-      return res.json({ status: false })
-    } else {
-      const user = await User.findById(data.id)
-      if (user) return res.json({ status: true, user: user.username })
-      else return res.json({ status: false })
+
+  try {
+    // Dekodowanie tokenu, aby uzyskać dane użytkownika
+    const decoded = jwt.verify(token, process.env.TOKEN_KEY)
+
+    // Szukamy użytkownika w bazie danych
+    const user = await User.findById(decoded.id)
+
+    // Jeśli użytkownik nie istnieje, zwracamy błąd 404
+    if (!user) {
+      return res.status(404).json({ message: 'Użytkownik nie istnieje' })
     }
-  })
+
+    // Dodajemy użytkownika do requesta, aby był dostępny w dalszej części aplikacji
+    req.user = user
+    next() // Przechodzimy do kolejnej funkcji (np. kontrolera)
+  } catch (error) {
+    console.error('Błąd weryfikacji tokenu:', error)
+
+    // Jeśli wystąpił problem z JWT lub jakikolwiek błąd, zwracamy błąd 403
+    return res.status(403).json({ message: 'Nieprawidłowy token' })
+  }
 }

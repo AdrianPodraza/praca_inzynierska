@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import axios, { AxiosResponse } from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
+import Navbar from '../components/Navbar'
 
-interface ServerResponse {
+type ServerResponse = {
   status: boolean
   user: string
 }
@@ -56,6 +57,7 @@ const Home: React.FC = () => {
 
   return (
     <>
+      <Navbar />
       <div>
         <h4>
           {' '}

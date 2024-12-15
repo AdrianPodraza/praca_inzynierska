@@ -1,31 +1,29 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react'
+
 import { Link, useNavigate } from 'react-router-dom'
 import axios, { AxiosResponse } from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
-import InputField from '../components/InputField'
+import TimeInputField from '../components/TimeInputField'
 import backgroundImage from '../assets/background.png'
-import { FaUser, FaHome } from 'react-icons/fa'
-import { IoEyeSharp } from 'react-icons/io5'
+import { FaHome } from 'react-icons/fa'
+import { useCookies } from 'react-cookie'
 
+import DateInputField from '../components/DateInputField'
 type InputValues = {
-  email: string
-  password: string
+  time: string
+  date: string
 }
 
-type ServerResponse = {
-  success: boolean
-  message: string
-}
-
-const Signin: React.FC = () => {
+function Appoitment() {
+  const [cookies, , removeCookie] = useCookies(['token'])
   const navigate = useNavigate()
   const [inputValue, setInputValue] = useState<InputValues>({
-    email: '',
-    password: '',
+    time: '',
+    date: '',
   })
   const [error, setError] = useState<string | null>(null)
 
-  const { email, password } = inputValue
+  const { date, time } = inputValue
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target
@@ -46,27 +44,27 @@ const Signin: React.FC = () => {
     toast.success(msg, {
       position: 'bottom-left',
     })
+    navigate('/')
   }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
-    try {
-      const { data }: AxiosResponse<ServerResponse> = await axios.post(
-        'http://localhost:4000/login',
-        {
-          ...inputValue,
-        },
-        { withCredentials: true },
-      )
 
-      const { success, message } = data
-      if (success) {
-        handleSuccess(message)
-        setTimeout(() => {
-          navigate('/')
-        }, 1000)
+    try {
+      const response = await axios.post(
+        'http://localhost:4000/appointment',
+        { date, time },
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${cookies.token}`,
+          },
+        },
+      )
+      if (response.data.success) {
+        handleSuccess(response.data.message)
       } else {
-        handleError(message)
+        handleError(response.data.message)
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -80,10 +78,7 @@ const Signin: React.FC = () => {
       }
       console.error('Error:', error)
     }
-    setInputValue({
-      email: '',
-      password: '',
-    })
+    setInputValue({ time: '', date: '' })
   }
 
   return (
@@ -108,47 +103,35 @@ const Signin: React.FC = () => {
               </Link>
             </div>
             <span>
-              <b>Logowanie</b>
+              <b>Umawianie wizyty</b>
             </span>
           </div>
 
           {error && <div className='text-red-500'>{error}</div>}
 
-          <InputField
-            label='e-mail lub nr-tel'
-            type='text'
-            name='email'
-            value={email}
+          <DateInputField
+            label='Data wizyty'
+            type='date'
+            name='date'
+            value={date}
             onChange={handleOnChange}
-          >
-            <FaUser className='absolute right-5 top-1/2 -translate-y-1/2' />
-          </InputField>
+          ></DateInputField>
 
-          <InputField
-            label='hasło'
-            type='password'
-            name='password'
-            value={password}
+          <TimeInputField
+            label='godzina wizyty'
+            name='time'
+            value={time}
+            selectedDate={date}
             onChange={handleOnChange}
-          >
-            <IoEyeSharp className='absolute right-5 top-1/2 -translate-y-1/2' />
-          </InputField>
-          <p className='-mt-7 place-self-end'>
-            Nie masz konta?{' '}
-            <Link to='/signup' className='text-blue-500 underline'>
-              Zarejestruj się!
-            </Link>
-          </p>
+          ></TimeInputField>
 
           <button className='grid place-items-center rounded-full bg-green-400 p-3 font-bold text-white'>
-            Zaloguj
+            Umów wizyte
           </button>
         </div>
       </form>
-
-      <ToastContainer />
     </div>
   )
 }
 
-export default Signin
+export default Appoitment

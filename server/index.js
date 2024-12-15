@@ -6,6 +6,7 @@ const app = express()
 require('dotenv').config()
 const authRoute = require('./Routes/AuthRoute')
 const mailRoute = require('./Routes/MailRoute')
+const appointmentRoute = require('./Routes/AppoitmentRoute')
 const { MONGO_URL, PORT } = process.env
 
 mongoose
@@ -30,3 +31,4 @@ app.use(express.json())
 
 app.use('/', authRoute)
 app.use('/api', mailRoute)
+app.use('/', appointmentRoute)
