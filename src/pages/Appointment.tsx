@@ -52,7 +52,7 @@ function Appoitment() {
 
     try {
       const response = await axios.post(
-        'http://localhost:4000/appointment',
+        'http://localhost:4000/appointments/appointment',
         { date, time },
         {
           withCredentials: true,

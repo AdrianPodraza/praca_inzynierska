@@ -63,7 +63,7 @@ const Signup: React.FC = () => {
     }
     try {
       const { data }: AxiosResponse<ServerResponse> = await axios.post(
-        'http://localhost:4000/signup',
+        'http://localhost:4000/auth/signup',
         {
           email,
           password,
@@ -75,7 +75,9 @@ const Signup: React.FC = () => {
 
       const { success, message } = data
       if (success) {
-        handleSuccess(message)
+        handleSuccess(
+          'Rejestracja powiodła się. Sprawdź swoją skrzynkę e-mail w celu potwierdzenia konta.',
+        )
         setTimeout(() => {
           navigate('/')
         }, 1000)

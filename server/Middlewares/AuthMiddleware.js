@@ -3,10 +3,8 @@ require('dotenv').config()
 const jwt = require('jsonwebtoken')
 
 module.exports.userVerification = async (req, res, next) => {
-  // Pobieramy token z ciasteczka
   const token = req.cookies.token
 
-  // Jeśli token nie istnieje, zwracamy błąd 401
   if (!token) {
     return res
       .status(401)
@@ -27,6 +25,7 @@ module.exports.userVerification = async (req, res, next) => {
 
     // Dodajemy użytkownika do requesta, aby był dostępny w dalszej części aplikacji
     req.user = user
+
     next() // Przechodzimy do kolejnej funkcji (np. kontrolera)
   } catch (error) {
     console.error('Błąd weryfikacji tokenu:', error)

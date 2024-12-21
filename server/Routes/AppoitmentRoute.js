@@ -10,6 +10,8 @@ const {
   ApproveAppointment,
   DeleteAppointment,
   FilterAppointments,
+  userAppointments,
+  adminAppointmentAdd,
 } = require('../Controllers/AppointmentController')
 
 router.post(
@@ -18,9 +20,11 @@ router.post(
   appointmentVerification,
   CreateAppointment,
 )
-router.get('/appointments', GetAppointments)
-router.put('/appointment/:id/approve', ApproveAppointment)
-router.delete('/appointment/:id', DeleteAppointment)
-router.get('/available-slots', FilterAppointments)
+router.get('/appointments', userVerification, GetAppointments)
+router.put('/appointment/:id/approve', userVerification, ApproveAppointment)
+router.delete('/appointment/:id/delete', userVerification, DeleteAppointment)
+router.get('/available-slots', userVerification, FilterAppointments)
+router.get('/user-appointments', userVerification, userAppointments)
+router.post('/admin-appointment-add', userVerification, adminAppointmentAdd)
 
 module.exports = router

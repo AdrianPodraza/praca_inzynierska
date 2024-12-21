@@ -1,8 +1,13 @@
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
 
-module.exports.createSecretToken = id => {
-  return jwt.sign({ id }, process.env.TOKEN_KEY, {
+module.exports.createSecretToken = user => {
+  return jwt.sign({ id: user._id, admin: user.admin }, process.env.TOKEN_KEY, {
     expiresIn: '1h',
   })
+}
+
+module.exports.generateVerificationToken = () => {
+  return crypto.randomBytes(32).toString('hex')
 }

@@ -15,6 +15,11 @@ type InputValues = {
 type ServerResponse = {
   success: boolean
   message: string
+  user?: {
+    email: string
+    username: string
+    isAdmin: boolean
+  }
 }
 
 const Signin: React.FC = () => {
@@ -52,7 +57,7 @@ const Signin: React.FC = () => {
     e.preventDefault()
     try {
       const { data }: AxiosResponse<ServerResponse> = await axios.post(
-        'http://localhost:4000/login',
+        'http://localhost:4000/auth/login',
         {
           ...inputValue,
         },
@@ -62,9 +67,27 @@ const Signin: React.FC = () => {
       const { success, message } = data
       if (success) {
         handleSuccess(message)
-        setTimeout(() => {
-          navigate('/')
-        }, 1000)
+
+        try {
+          const adminCheck = await axios.get(
+            'http://localhost:4000/auth/verify-admin',
+            {
+              withCredentials: true, // Wysyłanie ciasteczka z tokenem
+            },
+          )
+
+          setTimeout(() => {
+            if (adminCheck.data.isAdmin) {
+              navigate('/admin-panel')
+            } else {
+              navigate('/')
+            }
+          }, 1000)
+        } catch (error) {
+          setTimeout(() => {
+            navigate('/')
+          }, 1000)
+        }
       } else {
         handleError(message)
       }

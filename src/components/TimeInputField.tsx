@@ -28,9 +28,10 @@ function TimeInputField({
       setIsLoading(true)
       try {
         const response = await axios.get(
-          'http://localhost:4000/available-slots',
+          'http://localhost:4000/appointments/available-slots',
           {
             params: { date: new Date(selectedDate).toISOString() },
+            withCredentials: true,
           },
         )
 

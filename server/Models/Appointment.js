@@ -21,14 +21,15 @@ const appointmentSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  duration: {
-    type: Number,
-    default: 30,
-  },
   notes: String,
   createdAt: {
     type: Date,
     default: Date.now,
   },
+  endTime: {
+    type: Date,
+    required: true,
+  },
 })
+
 module.exports = mongoose.model('appointment', appointmentSchema)
