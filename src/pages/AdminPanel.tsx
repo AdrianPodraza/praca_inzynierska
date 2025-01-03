@@ -24,12 +24,16 @@ function AdminPanel() {
               <li>
                 <Link to='appointment-all'>Wszystkie wizyty</Link>
               </li>
+              <li>
+                <Link to='patient-all'>Pacjenci</Link>
+              </li>
             </ul>
           </nav>
         </div>
       </div>
-
-      <Outlet />
+      <div className='flex  w-full justify-center'>
+        <Outlet />
+      </div>
     </div>
   )
 }

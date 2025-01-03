@@ -28,18 +28,18 @@ function App() {
 
         <Route path='/' element={<Home />} />
         <Route element={<UserProtectedRoute />}>
-          <Route path='/user-profile' element={<UserPanel />} />
-          <Route path='/user-profile/edit' element={<EditUserProfile />} />
-          <Route
-            path='/user-profile/appointments'
-            element={<UserAppointments />}
-          />
-          <Route
-            path='/user-profile/change-password'
-            element={<EditUserPassword />}
-          />
+          <Route path='/user-profile' element={<UserPanel />}>
+            <Route path='/user-profile/edit' element={<EditUserProfile />} />
+            <Route
+              path='/user-profile/appointments'
+              element={<UserAppointments />}
+            />
+            <Route
+              path='/user-profile/change-password'
+              element={<EditUserPassword />}
+            />
+          </Route>
           <Route path='/appointment' element={<Appoitment />} />
-          <Route path='/user-profile' element={<UserPanel />} />
         </Route>
 
         <Route element={<AdminProtectedRoute />}>
